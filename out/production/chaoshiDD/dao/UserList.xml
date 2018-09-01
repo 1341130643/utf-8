@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--a-->
+<mapper namespace="dao.UserList">
+	<select id="SeveList" resultType="entity.User">
+		SELECT a.id as id,userCode,userName,gender,(year(now())-year(birthday)-1) as age,phone,userRole,roleName as userRoleName FROM `smbms_user` as a,smbms_role as b
+		WHERE a.userRole = b.id 
+		<if test="userName != null and userName!=''">
+			and userName LIKE CONCAT('%',#{userName},'%')
+		</if>
+		<if test="role!=null and role!=0">
+			and userRole = #{role}
+		</if>
+		<if test="from!=null">
+		 limit #{from},#{pageSize}
+		</if>
+ 	</select> 
+	<select id="SeveId" resultType="entity.User">
+			SELECT * FROM smbms_user WHERE userCode = #{userCode}
+ 	</select> 
+	<select id="SeveUid" resultType="entity.User">
+			SELECT * FROM smbms_user WHERE id = #{id}
+ 	</select> 
+	<insert id = "addUser">
+		INSERT INTO smbms_user(userCode,userName,userPassword,gender,birthday,phone,address,userRole)
+		VALUES(#{userCode},#{userName},#{userPassword},#{gender},#{birthday},#{phone},#{address},#{userRole});
+	</insert>
+	<!--修改用户-->
+	<update id="UpdateUser">
+		UPDATE smbms_user SET userName = #{userName} ,gender = #{gender},
+		birthday = #{birthday},phone = #{phone},address = #{address},userRole = #{userRole}
+		WHERE id = #{id}
+	</update>
+	<!--删除用户-->
+	<delete id="DelUser">
+		DELETE FROM smbms_user WHERE id in
+		<foreach collection="list" item="ids"
+			open="(" separator="," close=")">
+				#{ids}
+		</foreach>
+	</delete>
+</mapper>

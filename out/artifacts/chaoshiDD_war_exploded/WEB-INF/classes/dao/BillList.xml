@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--a-->
+<mapper namespace="dao.BillList">
+	<select id="QueryBill" resultType="entity.Bill">
+ 		SELECT a.*,b.proName FROM smbms_bill as a
+		INNER JOIN smbms_provider b on a.providerId = b.id
+		where 1=1
+			<if test="queryProductName != null and queryProductName !=''">
+				and a.productName LIKE CONCAT('%',#{queryProductName},'%')
+			</if>
+			<if test="queryProviderId != null and queryProviderId != 0">
+				and a.providerId = #{queryProviderId}
+			</if>
+			<if test="queryIsPayment != null and queryIsPayment != 0">
+				and a.isPayment = #{queryIsPayment}
+			</if>
+			<if test="from!=null">
+		 		limit #{from},#{pageSize}
+			</if>
+ 	</select> 
+ 	
+ 	<select id="QueryProvider" resultType="entity.Provider">
+ 		SELECT id,proName FROM smbms_provider
+ 	</select> 
+</mapper>

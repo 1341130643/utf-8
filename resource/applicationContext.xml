@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+	http://www.springframework.org/schema/aop
+	http://www.springframework.org/schema/aop/spring-aop-3.2.xsd">
+	<bean id="helloSpring" class="entity.HelloSpring">
+		<property name="who">
+			<value>Spring</value>
+		</property>
+	</bean>
+	<bean id="testDaoService" class="service.TestDaoService">
+		<property name="testDao">
+			<bean class="dao.TestDao"/>
+		</property>
+	</bean>
+	<bean id="aroundL" class="aop.AroundLogger"></bean>
+	<aop:config>
+		<!--定义切入点-->
+		<aop:pointcut id="pointcut"
+				expression="execution(* service..*.*(..))"/>
+		<aop:aspect ref="aroundL">
+			<aop:around method="aroundLogger" pointcut-ref="pointcut"/>
+		</aop:aspect>
+	</aop:config>
+	
+	
+</beans>
